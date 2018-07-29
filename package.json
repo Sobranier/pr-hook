@@ -1,0 +1,20 @@
+{
+  "name": "@mc/pc-hook",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "mc-pr": "index.js"
+  },
+  "author": "yanweiqing",
+  "license": "ISC",
+  "dependencies": {
+    "colors": "^1.3.1",
+    "commander": "^2.16.0",
+    "shelljs": "^0.8.2",
+    "shelljs-plugin-open": "^0.2.0"
+  }
+}

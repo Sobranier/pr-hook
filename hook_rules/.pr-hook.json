@@ -1,0 +1,5 @@
+{
+  "gitUrl": "gitlab 项目 url",
+  "projectId": "git lab 项目 id",
+  "defaultBranch": "develop"
+}
