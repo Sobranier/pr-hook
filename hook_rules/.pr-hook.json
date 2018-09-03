@@ -1,6 +1,6 @@
 {
   "gitUrl": "git lab 发起项目 url",
-  "sourceProjectId": "git lab 发起项目 id",
-  "targetProjectId": "git lab 目标项目 id",
+  "sourceId": "git lab 发起项目 id",
+  "targetId": "git lab 目标项目 id",
   "defaultBranch": "目标项目的目标分支 develop"
 }

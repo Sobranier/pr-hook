@@ -28,8 +28,8 @@ function run(options) {
           obj.sourceBranch = options.source ? options.source : stdout;
           obj.targetBranch = options.target ? options.target : obj.defaultBranch;
           // 默认的 source 和 target 会走配置
-          obj.sourceProjectId = options.sourceId ? options.sourceId : obj.sourceProjectId;
-          obj.targetProjectId = options.targetId ? options.targetId : obj.targetProjectId;
+          obj.sourceProjectId = options.sourceId ? options.sourceId : obj.sourceId;
+          obj.targetProjectId = options.targetId ? options.targetId : obj.targetId;
 
           Object.keys(obj).forEach(function(key) {
             if (obj[key].indexOf('\n') > -1) {
