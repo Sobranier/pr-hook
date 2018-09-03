@@ -20,6 +20,8 @@ program
   .description('执行指令')
   .option('-t, --target [value]', '修改默认目标分支')
   .option('-s, --source [value]', '修改默认源头分支')
+  .option('--targetId [value]', '修改默认目标 ID')
+  .option('--sourceId [value]', '修改默认源头 ID')
   .action((options) => {
     if (typeof options === 'string') {
       rule.run({

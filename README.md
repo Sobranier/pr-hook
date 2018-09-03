@@ -1,4 +1,8 @@
-## 美菜项目提交钩子
+# mc-pr
+
+项目提交钩子工具
+
+![meicai logo](http://www.meicai.cn/assets/images/new-img/logo.png)
 
 ### 说明
 
@@ -14,5 +18,13 @@ mc-pr init
 
 mc-pr run
 // 执行
+```
+
+```
+默认会按照配置，发起一个从gitUrl项目，基于 sourceId 的当前分支，目标为 targetId ，使用 defaultBranch 的分支。
+
+用户可以自行设置 source\target\sourceId\targetId 来对默认值进行覆盖
+
+如: mc-pr run --source develop --target master
 
 ```

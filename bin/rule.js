@@ -24,13 +24,20 @@ function run(options) {
         if (code !== 0) {
           shell.exit(1);
         } else {
+          // 如果未指定分支号，会从当前分支向配置的默认分支发起 Pr
           obj.sourceBranch = options.source ? options.source : stdout;
           obj.targetBranch = options.target ? options.target : obj.defaultBranch;
-          if (obj.sourceBranch.indexOf('\n') > -1) {
-            obj.sourceBranch = obj.sourceBranch.slice(0, -1);
-          }
+          // 默认的 source 和 target 会走配置
+          obj.sourceProjectId = options.sourceId ? options.sourceId : obj.sourceProjectId;
+          obj.targetProjectId = options.targetId ? options.targetId : obj.targetProjectId;
 
-          let url =obj.gitUrl + "/merge_requests/new?merge_request[source_project_id]=" +  obj.projectId + "&merge_request[source_branch]=" + obj.sourceBranch + "&merge_request[target_project_id]=" + obj.projectId + "&merge_request[target_branch]=" + obj.targetBranch;
+          Object.keys(obj).forEach(function(key) {
+            if (obj[key].indexOf('\n') > -1) {
+              obj[key] = obj[key].slice(0, -1);
+            }
+          })
+
+          let url =obj.gitUrl + "/merge_requests/new?merge_request[source_project_id]=" +  obj.sourceProjectId + "&merge_request[source_branch]=" + obj.sourceBranch + "&merge_request[target_project_id]=" + obj.targetProjectId + "&merge_request[target_branch]=" + obj.targetBranch;
           shell.open(url);
         }
       })
