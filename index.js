@@ -20,8 +20,8 @@ program
   .description('执行指令')
   .option('-t, --target [value]', '修改默认目标分支')
   .option('-s, --source [value]', '修改默认源头分支')
-  .option('--targetId [value]', '修改默认目标 ID')
-  .option('--sourceId [value]', '修改默认源头 ID')
+  .option('-T, --targetId [value]', '修改默认目标 ID')
+  .option('-S, --sourceId [value]', '修改默认源头 ID')
   .action((options) => {
     if (typeof options === 'string') {
       rule.run({
@@ -33,7 +33,7 @@ program
   }).on('--help', function() {
     console.log('\n---------->直接执行，默认从当前分支提交 pr 到默认分支'.yellow);
     console.log('\n---------->添加一个参数，则会订为目标分支'.yellow);
-    console.log('\n---------->添加--source 和 --target参数，则会同时修改源分支和目标分支'.yellow);
+    console.log('\n---------->添加--source 和 --target参数，可以会同时修改源分支和目标分支'.yellow);
   });
 
 program
