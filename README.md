@@ -18,13 +18,31 @@ mc-pr init
 
 mc-pr run
 // 执行
-```
+
+// 建议添加到package.json当中，配合git-hoooks
+...
+"scripts": {
+  ...
+  "pr": "mc-pr run",
+  ...
+},
+"husky": {
+  "hooks": {
+    ...
+    "post-receive": "npm run test && npm run pr", // 待定
+    ...
+  }
+}
+...
 
 ```
-默认会按照配置，发起一个从gitUrl项目，基于 sourceId 的当前分支，目标为 targetId ，使用 defaultBranch 的分支。
 
-用户可以自行设置 source\target\sourceId\targetId 来对默认值进行覆盖
+```
+// 默认会按照配置，发起一个从gitUrl项目，基于 sourceId 的当前分支，目标为 targetId ，使用都是当前的分支。
 
-如: mc-pr run --source develop --target master
+// 用户可以自行设置 source\target\sourceId\targetId 来对默认值进行覆盖
+
+mc-pr run --source develop --target master
+mc-pr run -s develop -t master -S 8012 -T 9009
 
 ```

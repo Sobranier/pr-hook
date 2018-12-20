@@ -1,5 +1,6 @@
 var shell = require('shelljs');
 var colors = require('colors');
+var path = require('path');
 var fs = require('fs');
 require('shelljs-plugin-open');
 
@@ -14,7 +15,24 @@ function create() {
 }
 
 function run(options) {
-  fs.readFile('mcconf/.pr-hook.json', 'utf8', function (err, data) {
+  let paths = process.cwd();
+  while(true) {
+    if (shell.exec('cat '+ paths + '/mcconf/.pr-hook.json', { silent: true }).code === 0) {
+      console.log('\n----------> 检测到.pr-hook.json文件\n'.green);
+      break;
+    }
+    paths = path.resolve(paths + '/..');
+    if (paths === '/') {
+      break;
+    }
+  }
+
+  if (paths === '/') {
+    console.log('\n----------> .pr-hook 文件不存在，请检测是否需要初始化\n'.yellow);
+    return;
+  }
+
+  fs.readFile(paths + '/mcconf/.pr-hook.json', 'utf8', function (err, data) {
     if (err) {
       shell.exit(1);
     }
@@ -26,7 +44,7 @@ function run(options) {
         } else {
           // 如果未指定分支号，会从当前分支向配置的默认分支发起 Pr
           obj.sourceBranch = options.source ? options.source : stdout;
-          obj.targetBranch = options.target ? options.target : obj.defaultBranch;
+          obj.targetBranch = options.target ? options.target : stdout;
           // 默认的 source 和 target 会走配置
           obj.sourceProjectId = options.sourceId ? options.sourceId : obj.sourceId;
           obj.targetProjectId = options.targetId ? options.targetId : obj.targetId;
@@ -37,7 +55,15 @@ function run(options) {
             }
           })
 
-          let url =obj.gitUrl + "/merge_requests/new?merge_request[source_project_id]=" +  obj.sourceProjectId + "&merge_request[source_branch]=" + obj.sourceBranch + "&merge_request[target_project_id]=" + obj.targetProjectId + "&merge_request[target_branch]=" + obj.targetBranch;
+          let url = obj.gitUrl
+            + "/merge_requests/new?merge_request[source_project_id]="
+            + obj.sourceProjectId
+            + "&merge_request[source_branch]="
+            + obj.sourceBranch
+            + "&merge_request[target_project_id]="
+            + obj.targetProjectId
+            + "&merge_request[target_branch]="
+            + obj.targetBranch;
           shell.open(url);
         }
       })
