@@ -1,7 +1,7 @@
 {
-  "name": "@mc/pr-hook",
-  "version": "0.2.0",
-  "description": "",
+  "name": "simple-pr",
+  "version": "0.2.1",
+  "description": "easy pr mc-pr easy-pr ",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,7 +9,7 @@
   "bin": {
     "mc-pr": "index.js"
   },
-  "author": "yanweiqing",
+  "author": "xuanmiao",
   "license": "ISC",
   "dependencies": {
     "colors": "^1.3.1",

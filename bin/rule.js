@@ -14,7 +14,7 @@ function create() {
   }
 }
 
-function run(options) {
+function run(options = {}) {
   let paths = process.cwd();
   while(true) {
     if (shell.exec('cat '+ paths + '/mcconf/.pr-hook.json', { silent: true }).code === 0) {
@@ -28,7 +28,7 @@ function run(options) {
   }
 
   if (paths === '/') {
-    console.log('\n----------> .pr-hook 文件不存在，请检测是否需要初始化\n'.yellow);
+    console.log('\n----------> .pr-hook 文件不存在，请执行 mc-pr init 初始化\n'.yellow);
     return;
   }
 
