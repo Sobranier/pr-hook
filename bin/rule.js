@@ -9,29 +9,25 @@ function create() {
   if (shell.exec('cat mcconf/.pr-hook.json', { silent: true }).code === 0) {
     console.log('\n----------> .pr-hook 文件已存在\n'.yellow);
   } else {
-    gitType = 'gitlab'
     shell.exec('git config remote.origin.url', { silent: true }, function(code, stdout, stderr) {
-      if(stdout.indexOf('github') > -1){
-        gitType = 'github'
-        shell.cp(__dirname + '/../hook_rules/.pr-github.json', 'mcconf/.pr-hook.json');
-      }else{
-        gitType = 'gitlab'
-        shell.cp(__dirname + '/../hook_rules/.pr-gitlab.json', 'mcconf/.pr-hook.json');
-      }
+      shell.cp(__dirname + '/../hook_rules/.pr-' + (stdout.indexOf('github') > -1 ? 'github' : 'gitlab') + '.json', 'mcconf/.pr-hook.json');
     })
 
     console.log('\n---------- mc-pr 初始化成功 ----------\n'.green);
   }
 }
 
-const defalutOptions = {
+const defaultOptions = {
   type: 'gitlab'
 }
 
-function run(options = defalutOptions) {
+function run(options = defaultOptions) {
   shell.exec('git config remote.origin.url', { silent: true }, function (code, stdout, stderr) {
-    if( code === 0) options.type = stdout.indexOf('github') > -1 ? 'github' : 'gitlab'
     let paths = process.cwd();
+
+    if( code === 0) {
+      options.type = stdout.indexOf('github') > -1 ? 'github' : 'gitlab'
+    }
     while(true) {
       if (shell.exec('cat '+ paths + '/mcconf/.pr-hook.json', { silent: true }).code === 0) {
         console.log('\n---------- 检测到.pr-hook.json文件 ----------\n'.green);
@@ -64,8 +60,9 @@ function run(options = defalutOptions) {
 
             // 如果命令行未指定分支号，会检测.pr-hook.json是否配置targetBranch，有配置走走配置，没有则默认采用当前分支名发起 Pr
             obj.sourceBranch = options.source ? options.source : stdout;
-            obj.targetBranch = options.target ? options.target :  obj.targetBranch ? obj.targetBranch : stdout;
-            if(obj.type === 'gitlab'){
+            obj.targetBranch = options.target ? options.target : stdout;
+
+            if (obj.type === 'gitlab') {
               // 默认的 source 和 target 会走配置
               obj.sourceProjectId = options.sourceId ? options.sourceId : obj.sourceId;
               obj.targetProjectId = options.targetId ? options.targetId : obj.targetId;
@@ -89,7 +86,7 @@ function run(options = defalutOptions) {
               + obj.targetBranch;
 
             // github
-            if(obj.type === 'github'){
+            if (obj.type === 'github') {
               // https://github.com/meicai-fe/pr-hook/compare/master...xuanmiaoshuo:develop
               url = obj.targetUrl.slice(0, -4)
                 + "/compare/"
@@ -99,6 +96,7 @@ function run(options = defalutOptions) {
                 + ":"
                 + obj.sourceBranch
             }
+
             shell.open(url);
           }
         })

@@ -5,7 +5,7 @@ var package = require('./package.json');
 var rule = require('./bin/rule.js');
 
 program
-  .version(package.version, '-v, --version')
+  .version(package.version, '-V, --version')
   .description('本工具用于方便进行与公司 git 的相关操作');
 
 program
@@ -20,11 +20,12 @@ program
   .command('run')
   .alias('r')
   .description('执行指令')
-  .option('-t, --target [value]', '修改默认目标分支')
-  .option('-s, --source [value]', '修改默认源头分支')
-  .option('-T, --targetId [value]', '修改默认目标 ID')
-  .option('-S, --sourceId [value]', '修改默认源头 ID')
+  .option('-t, --target [value]', '修改目标分支, 默认是当前所在分支')
+  .option('-s, --source [value]', '修改源头分支, 默认是当前所在分支')
+  .option('-T, --targetId [value]', '修改默认目标 ID(gitLab用)')
+  .option('-S, --sourceId [value]', '修改默认源头 ID(gitLab用)')
   .action((options) => {
+    // 单独参数，快捷方式
     if (typeof options === 'string') {
       rule.run({
         target: options
@@ -39,6 +40,5 @@ program
     console.log('\n---------->添加--source 和 --target参数，可以会同时修改源分支和目标分支'.yellow);
   });
 
-program
-  .parse(process.argv);
+program.parse(process.argv);
 program.args.length === 0 && rule.run()
