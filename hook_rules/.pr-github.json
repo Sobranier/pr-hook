@@ -1,0 +1,6 @@
+{
+  "type": "github",
+  "username": "github用户名",
+  "targetUrl": "目标仓库https地址",
+  "targetBranch": "目标分支"
+}
