@@ -1,5 +1,6 @@
 {
-  "gitUrl": "git lab 发起项目 url",
-  "sourceId": "git lab 发起项目 id",
-  "targetId": "git lab 目标项目 id"
+  "type": "github",
+  "username": "xuanmiaoshuo",
+  "targetUrl": "https://github.com/meicai-fe/pr-hook.git",
+  "targetBranch": "master"
 }

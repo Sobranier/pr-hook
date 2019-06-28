@@ -10,15 +10,19 @@ function create() {
     console.log('\n----------> .pr-hook 文件存在，请检测是否需要覆盖\n'.yellow);
   } else {
     shell.cp(__dirname + '/../hook_rules/.pr-hook.json', 'mcconf/');
-    console.log('\n----------> mc-pr 初始化成功\n'.green);
+    console.log('\n---------- mc-pr 初始化成功 ----------\n'.green);
   }
 }
 
-function run(options = {}) {
+const defalutOptions = {
+  type: 'gitlab'
+}
+
+function run(options = defalutOptions) {
   let paths = process.cwd();
   while(true) {
     if (shell.exec('cat '+ paths + '/mcconf/.pr-hook.json', { silent: true }).code === 0) {
-      console.log('\n----------> 检测到.pr-hook.json文件\n'.green);
+      console.log('\n---------- 成功检测到.pr-hook.json文件 ----------\n'.green);
       break;
     }
     paths = path.resolve(paths + '/..');
@@ -42,19 +46,26 @@ function run(options = {}) {
         if (code !== 0) {
           shell.exit(1);
         } else {
-          // 如果未指定分支号，会从当前分支向配置的默认分支发起 Pr
+          // 初始化配置
+          // 若未指定类型 默认为gitlab
+          obj.type = obj.type ? obj.type : options.type;
+
+          // 如果命令行未指定分支号，会检测.pr-hook.json是否配置targetBranch，有配置走走配置，没有则默认采用当前分支名发起 Pr
           obj.sourceBranch = options.source ? options.source : stdout;
-          obj.targetBranch = options.target ? options.target : stdout;
-          // 默认的 source 和 target 会走配置
-          obj.sourceProjectId = options.sourceId ? options.sourceId : obj.sourceId;
-          obj.targetProjectId = options.targetId ? options.targetId : obj.targetId;
+          obj.targetBranch = options.target ? options.target :  obj.targetBranch ? obj.targetBranch : stdout;
+          if(obj.type === 'gitlab'){
+            // 默认的 source 和 target 会走配置
+            obj.sourceProjectId = options.sourceId ? options.sourceId : obj.sourceId;
+            obj.targetProjectId = options.targetId ? options.targetId : obj.targetId;
+          }
 
           Object.keys(obj).forEach(function(key) {
-            if (obj[key].indexOf('\n') > -1) {
+            if (obj[key] && obj[key].indexOf('\n') > -1) {
               obj[key] = obj[key].slice(0, -1);
             }
           })
 
+          // gitlab
           let url = obj.gitUrl
             + "/merge_requests/new?merge_request[source_project_id]="
             + obj.sourceProjectId
@@ -64,6 +75,18 @@ function run(options = {}) {
             + obj.targetProjectId
             + "&merge_request[target_branch]="
             + obj.targetBranch;
+
+          // github
+          if(obj.type === 'github'){
+            // https://github.com/meicai-fe/pr-hook/compare/master...xuanmiaoshuo:develop
+            url = obj.targetUrl.slice(0, -4)
+              + "/compare/"
+              + obj.targetBranch
+              + "..."
+              + obj.username
+              + ":"
+              + obj.sourceBranch
+          }
           shell.open(url);
         }
       })
